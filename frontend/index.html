@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SocialConnect</title>
+    <link rel="icon" href="data:;base64,iVBORw0KGgo=">
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <!-- Login/Register Screen -->
+    <div id="auth-screen" class="screen active" style="display: flex">
+      <div class="auth-container">
+        <div class="auth-header">
+          <h1>SocialConnect</h1>
+          <p>Connect with friends and share your moments</p>
+        </div>
+
+        <!-- Login Form -->
+        <div id="login-form" class="auth-form active">
+          <h2>Welcome Back</h2>
+          <form id="login-form-element">
+            <div class="form-group">
+              <label class="form-label" for="login-email">Email</label>
+              <input
+                type="email"
+                id="login-email"
+                class="form-control"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="login-password">Password</label>
+              <input
+                type="password"
+                id="login-password"
+                class="form-control"
+                required
+              />
+            </div>
+            <button type="submit" class="btn btn--primary btn--full-width">
+              Log In
+            </button>
+          </form>
+          <p class="auth-switch">
+            Don't have an account? <a href="#" id="show-register">Sign up</a>
+          </p>
+          <p class="auth-switch">
+            <a href="#" id="show-reset">Forgot password?</a>
+          </p>
+        </div>
+
+        <!-- Register Form -->
+        <div id="register-form" class="auth-form">
+          <h2>Join SocialConnect</h2>
+          <form id="register-form-element">
+            <div class="form-group">
+              <label class="form-label" for="register-name">Full Name</label>
+              <input
+                type="text"
+                id="register-name"
+                class="form-control"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="register-username">Username</label>
+              <input
+                type="text"
+                id="register-username"
+                class="form-control"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="register-email">Email</label>
+              <input
+                type="email"
+                id="register-email"
+                class="form-control"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="register-password">Password</label>
+              <input
+                type="password"
+                id="register-password"
+                class="form-control"
+                required
+              />
+            </div>
+            <button type="submit" class="btn btn--primary btn--full-width">
+              Sign Up
+            </button>
+          </form>
+          <p class="auth-switch">
+            Already have an account? <a href="#" id="show-login">Log in</a>
+          </p>
+        </div>
+
+        <!-- Password Reset Form -->
+        <div id="reset-form" class="auth-form">
+          <h2>Reset Password</h2>
+          <form id="reset-form-element">
+            <div class="form-group">
+              <label class="form-label" for="reset-email">Email</label>
+              <input
+                type="email"
+                id="reset-email"
+                class="form-control"
+                required
+              />
+            </div>
+            <button type="submit" class="btn btn--primary btn--full-width">
+              Send Reset Link
+            </button>
+          </form>
+          <p class="auth-switch">
+            <a href="#" id="back-to-login">Back to Login</a>
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main App -->
+    <div id="main-app" class="screen" style="display: none">
+      <!-- Header -->
+      <header class="app-header">
+        <div class="header-content">
+          <!-- THIS IS THE CLICKABLE LOGO -->
+          <h1
+            class="app-logo"
+            onclick="app.navigateToView('feed')"
+            style="cursor: pointer"
+          >
+            SocialConnect
+          </h1>
+          <div class="header-actions">
+            <button class="btn btn--secondary btn--sm" id="search-btn">
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <circle cx="11" cy="11" r="8"></circle>
+                <path d="m21 21-4.35-4.35"></path>
+              </svg>
+            </button>
+            <div class="notification-container">
+              <button class="btn btn--secondary btn--sm" id="notifications-btn">
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"></path>
+                  <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"></path>
+                </svg>
+                <span
+                  class="notification-badge"
+                  id="notification-badge"
+                  style="display: none"
+                  >0</span
+                >
+              </button>
+              <div class="notification-dropdown" id="notification-dropdown">
+                <div class="notification-header">
+                  <h3>Notifications</h3>
+                  <button class="btn btn--secondary btn--sm" id="mark-all-read">
+                    Mark all read
+                  </button>
+                </div>
+                <div class="notification-list" id="notification-list">
+                  <!-- Notifications will be populated here -->
+                </div>
+              </div>
+            </div>
+            <button class="btn btn--secondary btn--sm" id="logout-btn">
+              Logout
+            </button>
+          </div>
+        </div>
+      </header>
+
+      <!-- Main Content -->
+      <main class="main-content">
+        <!-- Feed View -->
+        <div id="feed-view" class="view active">
+          <div class="feed-container">
+            <!-- Post Composer -->
+            <div class="post-composer card">
+              <div class="card__body">
+                <div class="composer-header">
+                  <img
+                    src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=40&h=40&fit=crop&crop=face"
+                    alt="Your avatar"
+                    class="user-avatar"
+                    id="composer-avatar"
+                  />
+                  <textarea
+                    placeholder="What's on your mind?"
+                    class="form-control composer-textarea"
+                    id="post-content"
+                  ></textarea>
+                </div>
+                <div class="composer-actions">
+                  <input
+                    type="file"
+                    id="post-image-input"
+                    accept="image/*"
+                    style="display: none"
+                  />
+                  <button class="btn btn--secondary btn--sm" id="add-image-btn">
+                    <svg
+                      width="16"
+                      height="16"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                    >
+                      <rect
+                        x="3"
+                        y="3"
+                        width="18"
+                        height="18"
+                        rx="2"
+                        ry="2"
+                      ></rect>
+                      <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                      <polyline points="21,15 16,10 5,21"></polyline>
+                    </svg>
+                    Photo
+                  </button>
+                  <button
+                    class="btn btn--primary"
+                    id="post-submit-btn"
+                    disabled
+                  >
+                    Post
+                  </button>
+                </div>
+                <div
+                  class="image-preview"
+                  id="image-preview"
+                  style="display: none"
+                >
+                  <img id="preview-image" alt="Preview" />
+                  <button class="remove-image-btn" id="remove-image-btn">
+                    &times;
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Posts Feed -->
+            <div class="posts-feed" id="posts-feed">
+              <!-- Posts will be populated here -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Profile View -->
+        <div id="profile-view" class="view">
+          <div class="profile-container">
+            <div class="profile-header card">
+              <div class="card__body">
+                <div class="profile-info">
+                  <div class="profile-avatar-section">
+                    <img
+                      src=""
+                      alt="Profile"
+                      class="profile-avatar"
+                      id="profile-avatar"
+                    />
+                    <!-- This container will be filled by JavaScript if it's your own profile -->
+                    <div id="avatar-action-container"></div>
+                    <!-- The file input is also now created dynamically by JS -->
+                  </div>
+                  <div class="profile-details">
+                    <h2 id="profile-name">User Name</h2>
+                    <p id="profile-username">@username</p>
+                    <p id="profile-bio">User bio goes here</p>
+                    <div class="profile-stats">
+                      <span><strong id="posts-count">0</strong> Posts</span>
+                      <span
+                        ><strong id="followers-count">0</strong> Followers</span
+                      >
+                      <span
+                        ><strong id="following-count">0</strong> Following</span
+                      >
+                    </div>
+                    <!-- This container will be filled by JavaScript -->
+                    <div id="profile-action-buttons" class="mt-8"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="profile-posts" id="profile-posts">
+              <!-- User's posts will be populated here -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Search View -->
+        <div id="search-view" class="view">
+          <div class="search-container">
+            <div class="search-header">
+              <div class="search-input-wrapper">
+                <input
+                  type="text"
+                  class="form-control search-input"
+                  id="search-input"
+                  placeholder="Search users, posts, hashtags..."
+                />
+                <button class="clear-search-btn hidden" id="clear-search-btn">
+                  &times;
+                </button>
+              </div>
+            </div>
+            <div class="search-tabs">
+              <button class="search-tab active" data-tab="users">Users</button>
+              <button class="search-tab" data-tab="posts">Posts</button>
+              <button class="search-tab" data-tab="hashtags">Hashtags</button>
+            </div>
+            <div class="search-results">
+              <div class="search-tab-content active" id="users-results">
+                <!-- User search results -->
+              </div>
+              <div class="search-tab-content" id="posts-results">
+                <!-- Post search results -->
+              </div>
+              <div class="search-tab-content" id="hashtags-results">
+                <!-- Hashtag search results -->
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Messages View -->
+        <div id="messages-view" class="view">
+          <div class="messages-container">
+            <div class="messages-list" id="messages-list">
+              <div class="messages-header">
+                <h2>Messages</h2>
+                <button class="btn btn--primary btn--sm" id="new-message-btn">
+                  Start a New Message
+                </button>
+              </div>
+              <div class="conversations" id="conversations">
+                <!-- Conversation list will be populated here -->
+              </div>
+            </div>
+            <div class="chat-window" id="chat-window" style="display: none">
+              <div class="chat-header">
+                <div class="chat-user-info">
+                  <img
+                    src=""
+                    alt="User"
+                    class="user-avatar"
+                    id="chat-user-avatar"
+                  />
+                  <div>
+                    <h3 id="chat-user-name">User Name</h3>
+                    <span class="user-status" id="chat-user-status"
+                      >Online</span
+                    >
+                  </div>
+                </div>
+                <button class="btn btn--secondary btn--sm" id="close-chat">
+                  Close
+                </button>
+              </div>
+              <div class="chat-messages" id="chat-messages">
+                <!-- Messages will be populated here -->
+              </div>
+              <div class="chat-input-container">
+                <input
+                  type="text"
+                  class="form-control"
+                  id="message-input"
+                  placeholder="Type a message..."
+                />
+                <button class="btn btn--primary" id="send-message-btn">
+                  Send
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Trending View -->
+        <div id="trending-view" class="view">
+          <div class="trending-container">
+            <div class="trending-hashtags card">
+              <div class="card__header">
+                <h2>Trending Hashtags</h2>
+              </div>
+              <div class="card__body">
+                <div class="hashtag-list" id="trending-hashtags-list">
+                  <!-- Trending hashtags will be populated here -->
+                </div>
+              </div>
+            </div>
+            <div class="trending-posts">
+              <h2>Popular Posts</h2>
+              <div class="posts-feed" id="trending-posts-feed">
+                <!-- Trending posts will be populated here -->
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Admin View -->
+        <div id="admin-view" class="view">
+          <div class="admin-container">
+            <div class="admin-header">
+              <h2>Admin Panel</h2>
+              <p>Manage users and content</p>
+            </div>
+            <div class="admin-tabs">
+              <button class="admin-tab active" data-tab="users">Users</button>
+              <button class="admin-tab" data-tab="posts">Posts</button>
+              <button class="admin-tab" data-tab="reports">Reports</button>
+            </div>
+            <div class="admin-content">
+              <div class="admin-tab-content active" id="admin-users">
+                <div class="admin-stats">
+                  <div class="stat-card">
+                    <h3 id="total-users">0</h3>
+                    <p>Total Users</p>
+                  </div>
+                  <div class="stat-card">
+                    <h3 id="active-users">0</h3>
+                    <p>Active Users</p>
+                  </div>
+                </div>
+                <div class="admin-list" id="admin-users-list">
+                  <!-- Admin users list will be populated here -->
+                </div>
+              </div>
+              <div class="admin-tab-content" id="admin-posts">
+                <div class="admin-stats">
+                  <div class="stat-card">
+                    <h3 id="total-posts">0</h3>
+                    <p>Total Posts</p>
+                  </div>
+                  <div class="stat-card">
+                    <h3 id="reported-posts">0</h3>
+                    <p>Reported Posts</p>
+                  </div>
+                </div>
+                <div class="admin-list" id="admin-posts-list">
+                  <!-- Admin posts list will be populated here -->
+                </div>
+              </div>
+              <div class="admin-tab-content" id="admin-reports">
+                <div class="admin-list" id="admin-reports-list">
+                  <!-- Admin reports list will be populated here -->
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+
+      <!-- Bottom Navigation -->
+      <nav class="bottom-nav">
+        <button class="nav-item active" data-view="feed">
+          <svg
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+            <polyline points="9,22 9,12 15,12 15,22"></polyline>
+          </svg>
+          <span>Home</span>
+        </button>
+        <button class="nav-item" data-view="search">
+          <svg
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <circle cx="11" cy="11" r="8"></circle>
+            <path d="m21 21-4.35-4.35"></path>
+          </svg>
+          <span>Search</span>
+        </button>
+          <button class="nav-item" data-view="messages">
+    <div class="nav-icon-wrapper">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+            <polyline points="22,6 12,13 2,6"></polyline>
+        </svg>
+        <div class="nav-indicator" id="messages-indicator" style="display: none;"></div>
+    </div>
+    <span>Messages</span>
+</button>
+        <button class="nav-item" data-view="trending">
+          <svg
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <polyline points="22,12 18,12 15,21 9,3 6,12 2,12"></polyline>
+          </svg>
+          <span>Trending</span>
+        </button>
+        <button class="nav-item" data-view="profile">
+          <svg
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+          </svg>
+          <span>Profile</span>
+        </button>
+      </nav>
+    </div>
+
+    <!-- MODAL FOR EDITING POSTS -->
+    <div id="edit-post-modal" class="modal hidden">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>Edit Post</h2>
+          <button class="modal-close" onclick="app.hideEditPostModal()">
+            &times;
+          </button>
+        </div>
+        <div class="modal-body">
+          <form id="edit-post-form">
+            <input type="hidden" id="edit-post-id" />
+            <div class="form-group">
+              <textarea
+                id="edit-post-content"
+                class="form-control"
+                rows="4"
+                required
+              ></textarea>
+            </div>
+            <div class="modal-actions">
+              <button
+                type="button"
+                class="btn btn--secondary"
+                onclick="app.hideEditPostModal()"
+              >
+                Cancel
+              </button>
+              <button type="submit" class="btn btn--primary">
+                Save Changes
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal for Edit Profile -->
+    <div id="edit-profile-modal" class="modal hidden">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>Edit Profile</h2>
+          <button class="modal-close" id="close-edit-profile">&times;</button>
+        </div>
+        <form id="edit-profile-form">
+          <div class="form-group">
+            <label class="form-label" for="edit-name">Name</label>
+            <input type="text" id="edit-name" class="form-control" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="edit-bio">Bio</label>
+            <textarea id="edit-bio" class="form-control" rows="3"></textarea>
+          </div>
+          <div class="modal-actions">
+            <button
+              type="button"
+              class="btn btn--secondary"
+              id="cancel-edit-profile"
+            >
+              Cancel
+            </button>
+            <button type="submit" class="btn btn--primary">Save Changes</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Modal for New Message -->
+    <div id="new-message-modal" class="modal hidden">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>New Message</h2>
+          <button class="modal-close" id="close-new-message">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label">Select User</label>
+            <div class="user-list" id="message-user-list">
+              <!-- Users will be populated here -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL FOR EDITING COMMENTS -->
+    <div id="edit-comment-modal" class="modal hidden">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>Edit Comment</h2>
+          <button class="modal-close" onclick="app.hideEditCommentModal()">
+            &times;
+          </button>
+        </div>
+        <div class="modal-body">
+          <form id="edit-comment-form">
+            <input type="hidden" id="edit-comment-id" />
+            <div class="form-group">
+              <textarea
+                id="edit-comment-content"
+                class="form-control"
+                rows="3"
+                required
+              ></textarea>
+            </div>
+            <div class="modal-actions">
+              <button
+                type="button"
+                class="btn btn--secondary"
+                onclick="app.hideEditCommentModal()"
+              >
+                Cancel
+              </button>
+              <button type="submit" class="btn btn--primary">
+                Save Changes
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <script src="app.js"></script>
+  </body>
+</html>
